@@ -4,7 +4,7 @@ import 'package:student_care/src/controller/user_controller.dart';
 import 'package:student_care/src/model/UserModel.dart';
 import 'package:student_care/src/services/auth_service.dart';
 import 'package:student_care/src/utils/reusable_widget.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../views/authentication/login.dart';
 import '../views/base.dart';
 
@@ -53,6 +53,7 @@ class AuthController extends ChangeNotifier{
 
       return;
     }
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
 
     UserModel userModel=UserModel(
       email: emailController.text.trim(),
@@ -60,6 +61,7 @@ class AuthController extends ChangeNotifier{
       userName: userNameController.text.trim(),
       department: null,
       level: null,
+      fcmToken:fcmToken ,
       profilePicture: null,
       createdAt: DateTime.now(),
       userId: user.uid,

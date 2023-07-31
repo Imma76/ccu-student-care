@@ -91,7 +91,9 @@ class AuthService{
       DocumentSnapshot
       data = await Collections.users.doc(id).get();
       if(data.exists){
-        return UserModel.fromJson(data.data() as Map<String,dynamic>);
+        Map<String,dynamic> json = data.data() as Map<String,dynamic>;
+        json['userId']=id;
+        return UserModel.fromJson(json);
       }
       return false;
 
