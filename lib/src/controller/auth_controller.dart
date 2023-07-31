@@ -74,7 +74,7 @@ class AuthController extends ChangeNotifier{
     // await userController.init();
      load = false;
     notifyListeners();
-    Navigator.pushAndRemoveUntil(navigatorKey.currentState!.context, MaterialPageRoute(builder: (context)=>const Login(),),(route)=>false);
+    Navigator.pushAndRemoveUntil(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>const Login(),),(route)=>false);
 
   }
 

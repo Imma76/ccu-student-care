@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:student_care/src/controller/user_controller.dart';
 
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,7 +61,7 @@ class CentralState extends ChangeNotifier{
         isUserPresent = (user != null);
         print(isUserPresent);
         notifyListeners();
-    //    await userController.init();
+      await userController.init();
 
         isAppLoading = false;
         notifyListeners();

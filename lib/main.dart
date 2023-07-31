@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         navigatorObservers: [BotToastNavigatorObserver()],
         builder: BotToastInit(),
         title: 'Flutter Demo',
