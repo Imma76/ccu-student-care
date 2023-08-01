@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student_care/src/controller/user_controller.dart';
+import 'package:student_care/src/views/authentication/welcome.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -17,13 +19,27 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  bool load=false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        actions: [Text('Sign out  ',style: GoogleFonts.poppins(fontSize:15 ,color: AppTheme.black))],
+        actions: [GestureDetector(
+            onTap: ()async{
+              setState(() {
+                load=true;
+              });
+              await FirebaseAuth.instance.signOut();
+              setState(() {
+                load=false;
+              });
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>WelcomePage()), (route) => false);
+              
+            },
+            child: Text('Sign out  ',style: GoogleFonts.poppins(fontSize:15 ,color: AppTheme.black)))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
