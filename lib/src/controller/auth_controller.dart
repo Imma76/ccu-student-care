@@ -6,7 +6,7 @@ import 'package:student_care/src/services/auth_service.dart';
 import 'package:student_care/src/utils/reusable_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../views/authentication/login.dart';
-import '../views/base.dart';
+import '../views/home/base.dart';
 
 class AuthController extends ChangeNotifier{
   bool load = false;

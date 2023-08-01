@@ -9,7 +9,7 @@ import 'package:student_care/src/theme/app_theme.dart';
 import 'package:student_care/src/utils/loader.dart';
 import 'package:student_care/src/views/authentication/welcome.dart';
 
-import 'src/views/base.dart';
+import 'src/views/home/base.dart';
 
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         navigatorObservers: [BotToastNavigatorObserver()],
         builder: BotToastInit(),
@@ -71,7 +72,7 @@ class _LoadAppState extends ConsumerState<LoadApp> {
    final centralController = ref.watch(centralProvider);
     if(centralController.isAppLoading) {
       return const Scaffold(
-          backgroundColor: AppTheme.primary,
+        //  backgroundColor: AppTheme.primary,
           body:Indicator2());
     }
     if(centralController.isUserPresent){

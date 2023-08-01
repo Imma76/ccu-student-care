@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:student_care/src/views/home.dart';
+import 'package:student_care/src/views/home/home.dart';
+import 'package:student_care/src/views/profile/profile.dart';
+
+import '../../theme/app_theme.dart';
 
 class Base extends ConsumerStatefulWidget {
   const Base({
@@ -15,7 +18,7 @@ class _BaseState extends ConsumerState<Base> {
   List<Widget> widgetList =[
 
     HomePage(),
-    HomePage(),
+    ProfileScreen(),
   ];
   int currentIndex = 0;
   @override
@@ -29,8 +32,8 @@ class _BaseState extends ConsumerState<Base> {
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined),label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person),label: '')
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined,color: currentIndex==0?AppTheme.primary:null,),label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.person,color: currentIndex==1?AppTheme.primary:null),label: '')
         ],
         currentIndex:currentIndex,
 

@@ -5,13 +5,16 @@ class Comments{
   String? content;
   DateTime? createdAt;
   String? userId;
+  String?postId;
 
-  Comments({this.createdAt,this.content,this.name,this.userId});
+  Comments({this.createdAt,this.content,this.name,this.userId,this.postId});
   Comments.fromJson(Map<String,dynamic> data){
     name= data['name'];
     createdAt=Timestamp(data['createdAt'].seconds,data['createdAt'].nanoseconds).toDate();
     content = data['content'];
     userId = data['userId'];
+
+    postId = data['postId'];
   }
 
   toJson(){
@@ -19,6 +22,8 @@ class Comments{
     data['name'] =name;
     data['content']=content;
     data['userId']=userId;
+    data['postId']= postId;
+    data['createdAt']= createdAt;
     return data;
   }
 }
