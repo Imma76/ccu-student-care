@@ -9,6 +9,7 @@ class PostService{
       await Collections.post.add(postModel.toJson());
       return true;
     }catch(e){
+      print(e.toString());
       return null;
     }
   }

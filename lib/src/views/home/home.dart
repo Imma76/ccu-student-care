@@ -86,6 +86,7 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
     // TODO: implement initState
     super.initState();
     ref.read(commentProvider);
+    commentList.clear();
    ref.read(commentProvider).getAllPostComments(widget.postModel!.postId!).then((value) {
       commentList=value;
       return commentList;

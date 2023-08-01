@@ -14,6 +14,8 @@ class CommentsController extends ChangeNotifier{
     List<Comments> commentList2 = [];
     CommentService.getAllComments(postId: postId)!.listen((event) {
       commentList.clear();
+
+      commentList2.clear();
       event.forEach((element) => commentList2!.add(element));
 
       print(commentList

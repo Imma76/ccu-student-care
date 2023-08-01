@@ -27,12 +27,18 @@ notifyListeners();
       username: userController.userModel!.userName,
       profilePic: userController.userModel!.profilePicture,
     );
+Poster anonymousPoster= Poster(
+  userId: userController.userModel!.userId,
+  email:"anonymous",
+  username: "anonymous",
+  profilePic: null,
+);
     PostModel post = PostModel(
       createdAt: DateTime.now(),
       status: PostStatus.pending,
       content: postController.text.trim(),
       picture:imageController.imageUrlList,
-      poster:poster,
+      poster:isAnonymous?anonymousPoster:poster,
     );
     final result = await PostService.createPost(post);
     if(result == null){
