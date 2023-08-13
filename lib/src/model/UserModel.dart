@@ -32,6 +32,7 @@ class UserModel{
    data['level']= level;
  data['profilePic']=  profilePicture;
  data['userName']=userName;
+ data['createdAt']= createdAt;
  return data;
  }
 

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:student_care/src/collections.dart';
 import 'package:student_care/src/model/PostModel.dart';
 
+import '../controller/postController.dart';
+
 class PostService{
   static Future createPost(PostModel postModel
       )async{
@@ -17,7 +19,7 @@ class PostService{
     bool? descending = true,
     var startAt,}){
     try{
-      Query query =  Collections.post.orderBy("createdAt",descending: true);
+      Query query =  Collections.post.orderBy("createdAt",descending: true).where("status",isEqualTo:PostStatus.approved);
 
       return query.snapshots()
           .map((snapShot) => snapShot.docs.map<PostModel>((postModel) {

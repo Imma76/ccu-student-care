@@ -86,6 +86,21 @@ class AuthService{
       return false;
     }
   }
+  Future findUserUsername(String username)async{
+    try{
+      QuerySnapshot
+      data = await Collections.users.where("userName",isEqualTo:username).get();
+      if(data.docs.isNotEmpty){
+        return true;
+      }
+      return false;
+
+    }on SocketException{
+      return false;
+    } catch(e){
+      return false;
+    }
+  }
   Future findUserById(String id)async{
     try{
       DocumentSnapshot

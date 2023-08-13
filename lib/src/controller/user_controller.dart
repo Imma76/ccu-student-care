@@ -11,9 +11,14 @@ class UserController extends ChangeNotifier{
  UserModel? userModel;
   init()async{
     centralState.startLoading();
-    userModel= await AuthService().findUserById(FirebaseAuth
+    final check= await AuthService().findUserById(FirebaseAuth
         .instance.currentUser
     !.uid);
+    if(check !=null){
+
+
+      userModel = check;
+    }
     print('userrr $userModel');
     centralState.stopLoading();
     notifyListeners();

@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:student_care/src/controller/comment_controller.dart';
 import 'package:student_care/src/controller/postController.dart';
 import 'package:student_care/src/model/PostModel.dart';
@@ -13,6 +15,7 @@ import '../../model/commentModel.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/loader.dart';
 import '../new_post.dart';
+import 'image_view.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({
@@ -56,19 +59,20 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       body: Column(
         children: [
-          ListView.builder(
-            shrinkWrap: true,
-              itemCount: postController.postList.length,
-              itemBuilder: (context,index){
-            return      PostWidget(postModel: postController.postList[index],);
-          })
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+                itemCount: postController.postList.length,
+                itemBuilder: (context,index){
+              return      PostWidget(postModel: postController.postList[index],);
+            }),
+          )
 
         ],
       ),
     );
   }
 }
-
 class PostWidget extends ConsumerStatefulWidget {
   final PostModel?postModel;
   const PostWidget({
@@ -87,7 +91,7 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
     super.initState();
     ref.read(commentProvider);
     commentList.clear();
-   ref.read(commentProvider).getAllPostComments(widget.postModel!.postId!).then((value) {
+    ref.read(commentProvider).getAllPostComments(widget.postModel!.postId!).then((value) {
       commentList=value;
       return commentList;
     });
@@ -95,16 +99,23 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
   @override
   Widget build(BuildContext context) {
     CommentsController commentsController= ref.watch(commentProvider);
+    PostController postController = ref.watch(postProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        padding: const EdgeInsets.all(8.0),
-        height: 100,
+        // constraints: const BoxConstraints
+        //   (minHeight: 100, maxHeight: 300.0),
+        height: MediaQuery.of(context).size.height/5,
+        // padding: const EdgeInsets.all(8.0),
+
+        // height: double.parse(widget.postModel!.content!.length!.toString()),
         color: Colors.white,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment:
           CrossAxisAlignment.start,
           children: [
+            const Gap(10),
             Row(
               children: [
                 const CircleAvatar(radius:15,child: Icon(Icons.person),),
@@ -113,32 +124,85 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
                   children: [
+
                     Text('${widget.postModel!.poster!.username}',style: GoogleFonts.poppins(fontSize:10,fontWeight:
 
                     FontWeight.bold),),
-                    Text('1 hour ago',style: GoogleFonts.poppins(fontSize:7 ),),
+                    Text(DateFormat('MMMM d, h:mm a').format(widget.postModel!.createdAt!),style: GoogleFonts.poppins(fontSize:7 ),),
 
 
                   ],
                 ),
                 const Spacer(),
                 Container(
-
                   decoration: BoxDecoration(borderRadius: BorderRadius
-                      .circular(5),  color: Colors.grey,),
+                      .circular(5),  color: widget.postModel!.status==Status.pending
+                      ?Colors.grey:widget.postModel!.status==Status.inReview?Colors.red:Colors.green,),
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.all(3.0),
-                        child: Text('Pending',style: GoogleFonts.poppins(fontSize:10 ),),
+                        child: Text('${widget.postModel!.status}',style: GoogleFonts.poppins(fontSize:10 ),),
                       )),
                 ),
               ],
             ),
             const Gap(6),
-            Text('${widget.postModel!.content}'),
-            const Spacer(
-            ),
+
+
+            GestureDetector(
+
+                onTap: (){
+                  showModalBottomSheet(context: context, builder: (context)=>Container(child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text('${widget.postModel!.content}',style: GoogleFonts.poppins(fontSize: 16)),
+                      ),
+                      if(widget.postModel!.picture!.isNotEmpty)
+                        Expanded(
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: widget.postModel!.picture!.length,
+                              itemBuilder: (context,index)=>Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageView(imageUrl: widget.postModel!.picture![index],))),
+                                  child: CachedNetworkImage(
+
+                                    imageUrl: widget.postModel!.picture![index],
+                                    //  width: 200,height: 100,
+                                    fit: BoxFit.cover,),
+                                ),
+                              )),
+                        ),
+                      Gap(30),
+                    ],
+                  )));
+                },
+                child: Text('${widget.postModel!.content}',overflow: TextOverflow.ellipsis,style: GoogleFonts.poppins(fontSize: 16),)),
+            if(widget.postModel!.picture!.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: widget.postModel!.picture!.length,
+                    itemBuilder: (context,index)=>Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>ImageView(imageUrl: widget.postModel!.picture![index],))),
+
+                        child: CachedNetworkImage(
+
+                          imageUrl: widget.postModel!.picture![index],
+                          //  width: 200,height: 100,
+                          fit: BoxFit.contain,),
+                      ),
+                    )),
+              ),
+
+            Gap(20),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
@@ -201,10 +265,10 @@ class _PostWidgetState extends ConsumerState<PostWidget> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('${commentList.length}'),
-                    const Icon(Icons.comment,size:
+                 Image.asset('assets/comments.png',height: 15,width: 15,),
+                    Gap(5),
+                    Text( commentList.isEmpty?'':'${commentList.length} '),
 
-                    15,),
                   ],
                 ),
               ),
@@ -248,7 +312,7 @@ class CommentsTile extends ConsumerWidget {
                     Text('${comments!.name}',style: GoogleFonts.poppins(fontSize:10,fontWeight:
 
                     FontWeight.bold),),
-                    Text('1 hour ago',style: GoogleFonts.poppins(fontSize:7 ),),
+        Text(DateFormat('MMMM d, h:mm a').format(comments!.createdAt!),style: GoogleFonts.poppins(fontSize:7 ),),
 
 
                   ],
@@ -269,4 +333,11 @@ class CommentsTile extends ConsumerWidget {
       ),
     );;
   }
+}
+
+
+class Status{
+  static String resolved='resolved';
+  static String pending='pending';
+  static String inReview='In Review';
 }

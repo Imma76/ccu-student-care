@@ -7,12 +7,14 @@ class PostModel{
   DateTime? createdAt;
   String?status;
   String?postId;
+  bool?isAnonymous;
 
   Poster? poster;
-  PostModel({this.poster,this.createdAt,this.status,this.content,this.picture,this.postId});
+  PostModel({this.poster,this.isAnonymous,this.createdAt,this.status,this.content,this.picture,this.postId});
 
   PostModel.fromJson(Map<String, dynamic> data){
     content = data['content'];
+    isAnonymous = data['isAnonymous'];
     picture =List.from(data['pics']);
     postId= data['postId'];
     createdAt =Timestamp(data['createdAt'].seconds,data['createdAt'].nanoseconds).toDate();
@@ -26,6 +28,7 @@ class PostModel{
     data['createdAt']= createdAt;
     data['status']= status;
     data['poster']= poster!.toJson();
+    data['isAnonymous']=isAnonymous ;
 
     data['pics']=picture;
     return data;
